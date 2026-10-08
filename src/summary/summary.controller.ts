@@ -14,56 +14,11 @@ import {
   SessionGuard,
 } from '../common/auth/session.guard';
 import { companyDateKey } from '../common/company-time';
+import { RawDateParam, readDateKey } from '../common/date-key';
 import { SummaryResult, SummaryService } from './summary.service';
 
 /** One bound as it may arrive on the query string. */
-type RawBound = string | string[] | undefined;
-
-const DATE_KEY_PATTERN = /^(\d{4})-(\d{2})-(\d{2})$/;
-
-/**
- * True only for a `YYYY-MM-DD` string naming a day that exists. The round trip
- * through `Date.UTC` rejects impossible calendar days such as `2026-02-30`,
- * which the pattern alone would happily accept.
- */
-const isDateKey = (value: string): boolean => {
-  const match = DATE_KEY_PATTERN.exec(value);
-  if (match === null) {
-    return false;
-  }
-  const year = Number(match[1]);
-  const month = Number(match[2]);
-  const day = Number(match[3]);
-  const probe = new Date(Date.UTC(year, month - 1, day));
-  return (
-    probe.getUTCFullYear() === year &&
-    probe.getUTCMonth() === month - 1 &&
-    probe.getUTCDate() === day
-  );
-};
-
-/**
- * Reads one range bound: absent (or empty) means "use the default", a single
- * well-formed calendar day is taken as given, and anything else — a repeated
- * bound, a malformed string, an impossible date — is refused rather than
- * guessed at.
- */
-const readBound = (raw: RawBound, fallback: string): string => {
-  if (raw === undefined) {
-    return fallback;
-  }
-  if (Array.isArray(raw)) {
-    throw new AppException(400, 'DATE_INVALID');
-  }
-  const value = raw.trim();
-  if (value === '') {
-    return fallback;
-  }
-  if (!isDateKey(value)) {
-    throw new AppException(400, 'DATE_INVALID');
-  }
-  return value;
-};
+type RawBound = RawDateParam;
 
 /**
  * The range this request covers.
@@ -79,8 +34,8 @@ const resolveRange = (
   rawTo: RawBound
 ): { from: string; to: string } => {
   const today = companyDateKey();
-  const from = readBound(rawFrom, `${today.slice(0, 8)}01`);
-  const to = readBound(rawTo, today);
+  const from = readDateKey(rawFrom, `${today.slice(0, 8)}01`);
+  const to = readDateKey(rawTo, today);
   if (from > to) {
     throw new AppException(400, 'RANGE_INVALID');
   }

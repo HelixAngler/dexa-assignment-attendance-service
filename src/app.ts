@@ -9,6 +9,8 @@ import { HttpExceptionFilter } from './common/http-exception.filter';
 import { employeeStatusReaderProvider } from './common/auth/prisma-employee-status.reader';
 import { sessionStoreProvider } from './common/auth/session.reader';
 import { prismaClientProvider } from './common/prisma.client';
+import { AttendanceViewController } from './attendance-view/attendance-view.controller';
+import { AttendanceViewService } from './attendance-view/attendance-view.service';
 import { MidnightCloseJob } from './jobs/midnight-close.job';
 import {
   DeactivationCloseController,
@@ -24,6 +26,7 @@ import { SummaryService } from './summary/summary.service';
     HealthController,
     PunchesController,
     SummaryController,
+    AttendanceViewController,
     DeactivationCloseController,
   ],
   providers: [
@@ -32,6 +35,7 @@ import { SummaryService } from './summary/summary.service';
     employeeStatusReaderProvider,
     PunchesService,
     SummaryService,
+    AttendanceViewService,
     MidnightCloseJob,
     DeactivationCloseService,
   ],
