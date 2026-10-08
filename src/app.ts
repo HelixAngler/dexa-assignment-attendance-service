@@ -10,13 +10,22 @@ import { employeeStatusReaderProvider } from './common/auth/prisma-employee-stat
 import { sessionStoreProvider } from './common/auth/session.reader';
 import { prismaClientProvider } from './common/prisma.client';
 import { MidnightCloseJob } from './jobs/midnight-close.job';
+import {
+  DeactivationCloseController,
+  DeactivationCloseService,
+} from './punches/deactivation.close';
 import { PunchesController } from './punches/punches.controller';
 import { PunchesService } from './punches/punches.service';
 import { SummaryController } from './summary/summary.controller';
 import { SummaryService } from './summary/summary.service';
 
 @Module({
-  controllers: [HealthController, PunchesController, SummaryController],
+  controllers: [
+    HealthController,
+    PunchesController,
+    SummaryController,
+    DeactivationCloseController,
+  ],
   providers: [
     prismaClientProvider,
     sessionStoreProvider,
@@ -24,6 +33,7 @@ import { SummaryService } from './summary/summary.service';
     PunchesService,
     SummaryService,
     MidnightCloseJob,
+    DeactivationCloseService,
   ],
 })
 class AppModule {}

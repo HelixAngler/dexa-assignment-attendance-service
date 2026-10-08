@@ -82,6 +82,14 @@ export const ERROR_MESSAGES: Record<string, LocalizedMessage> = {
     id: 'Arah absen harus bernilai masuk atau pulang.',
     en: 'Punch direction must be either masuk or pulang.',
   },
+  INVALID_BODY: {
+    id: 'Isi permintaan tidak valid. Kolom employeeId wajib berupa UUID yang valid.',
+    en: 'The request body is invalid. The employeeId field must be a valid UUID.',
+  },
+  INTERNAL_FORBIDDEN: {
+    id: 'Anda tidak berwenang memanggil layanan internal ini.',
+    en: 'You are not authorized to call this internal service endpoint.',
+  },
   RANGE_INVALID: {
     id: 'Rentang tanggal tidak valid. Tanggal mulai tidak boleh setelah tanggal akhir.',
     en: 'Invalid date range. The start date cannot be after the end date.',
