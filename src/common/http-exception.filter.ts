@@ -86,6 +86,10 @@ export const ERROR_MESSAGES: Record<string, LocalizedMessage> = {
     id: 'Rentang tanggal tidak valid. Tanggal mulai tidak boleh setelah tanggal akhir.',
     en: 'Invalid date range. The start date cannot be after the end date.',
   },
+  DATE_INVALID: {
+    id: 'Format tanggal tidak valid. Gunakan format YYYY-MM-DD dengan tanggal kalender yang sah.',
+    en: 'Invalid date format. Use YYYY-MM-DD with a valid calendar date.',
+  },
   NOT_FOUND: {
     id: 'Data yang diminta tidak ditemukan.',
     en: 'The requested data was not found.',
