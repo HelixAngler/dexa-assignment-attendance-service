@@ -6,9 +6,22 @@ import cookieParser from 'cookie-parser';
 
 import { HealthController } from './health.controller';
 import { HttpExceptionFilter } from './common/http-exception.filter';
+import { employeeStatusReaderProvider } from './common/auth/prisma-employee-status.reader';
+import { sessionStoreProvider } from './common/auth/session.reader';
+import { prismaClientProvider } from './common/prisma.client';
+import { MidnightCloseJob } from './jobs/midnight-close.job';
+import { PunchesController } from './punches/punches.controller';
+import { PunchesService } from './punches/punches.service';
 
 @Module({
-  controllers: [HealthController],
+  controllers: [HealthController, PunchesController],
+  providers: [
+    prismaClientProvider,
+    sessionStoreProvider,
+    employeeStatusReaderProvider,
+    PunchesService,
+    MidnightCloseJob,
+  ],
 })
 class AppModule {}
 

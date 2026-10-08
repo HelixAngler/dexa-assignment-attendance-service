@@ -148,20 +148,35 @@ class IoredisSessionClient implements SessionRedisClient {
 }
 
 /**
+ * Store that also owns its Redis connection. The connection is dropped when
+ * the application shuts down, so a process that only ever created the store
+ * never leaves an open socket behind after its work is done.
+ */
+export class ManagedSessionStore extends RedisSessionStore {
+  constructor(private readonly client: Redis, now: () => number = Date.now) {
+    super(new IoredisSessionClient(client), now);
+  }
+
+  onApplicationShutdown(): void {
+    this.client.disconnect();
+  }
+}
+
+/**
  * Builds the shared store. The connection is lazy (the first command dials
  * Redis) so constructing the store never blocks or fails application startup.
  */
 export const createSessionStore = (
   redisUrl: string = config.redisUrl,
   now: () => number = Date.now
-): SessionStore => {
+): ManagedSessionStore => {
   const client = new Redis(redisUrl, { lazyConnect: true });
   client.on('error', (error: Error) => {
     // Keep the process alive when Redis is unreachable; reads then reject and
     // the caller sees an ordinary failure instead of an unhandled crash.
     console.error(`session store redis error: ${error.message}`);
   });
-  return new RedisSessionStore(new IoredisSessionClient(client), now);
+  return new ManagedSessionStore(client, now);
 };
 
 /** Provider for the `SESSION_STORE` token; wire it into the module that owns guarded routes. */

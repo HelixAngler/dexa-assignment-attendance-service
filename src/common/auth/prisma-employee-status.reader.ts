@@ -1,6 +1,7 @@
 import { Provider } from '@nestjs/common';
 
-import { PrismaClient } from '../../generated/prisma';
+import type { PrismaClient } from '../../generated/prisma';
+import { PRISMA_CLIENT, ManagedPrismaClient } from '../prisma.client';
 import {
   EMPLOYEE_STATUS_READER,
   EmployeeStatusReader,
@@ -28,10 +29,13 @@ export class PrismaEmployeeStatusReader implements EmployeeStatusReader {
 }
 
 /**
- * Provider for the `EMPLOYEE_STATUS_READER` token. Creates its own client, so
- * wire it only into modules that actually serve guarded routes.
+ * Provider for the `EMPLOYEE_STATUS_READER` token. It reuses the shared
+ * database client, so every module that serves guarded routes resolves status
+ * and role through the same connection pool instead of opening a second one.
  */
 export const employeeStatusReaderProvider: Provider = {
   provide: EMPLOYEE_STATUS_READER,
-  useFactory: () => new PrismaEmployeeStatusReader(new PrismaClient()),
+  useFactory: (managed: ManagedPrismaClient): EmployeeStatusReader =>
+    new PrismaEmployeeStatusReader(managed.client),
+  inject: [PRISMA_CLIENT],
 };

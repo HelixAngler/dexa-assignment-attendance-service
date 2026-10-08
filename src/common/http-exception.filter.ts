@@ -70,6 +70,18 @@ export const ERROR_MESSAGES: Record<string, LocalizedMessage> = {
     id: 'Permintaan dengan kunci idempotensi yang sama berisi data yang berbeda.',
     en: 'A request with the same idempotency key carried a different payload.',
   },
+  MISSING_IDEMPOTENCY_KEY: {
+    id: 'Header Idempotency-Key wajib diisi pada setiap permintaan absen.',
+    en: 'The Idempotency-Key header is required on every punch request.',
+  },
+  IDEMPOTENCY_KEY_INVALID: {
+    id: 'Header Idempotency-Key harus berupa UUID yang valid.',
+    en: 'The Idempotency-Key header must be a valid UUID.',
+  },
+  DIRECTION_INVALID: {
+    id: 'Arah absen harus bernilai masuk atau pulang.',
+    en: 'Punch direction must be either masuk or pulang.',
+  },
   RANGE_INVALID: {
     id: 'Rentang tanggal tidak valid. Tanggal mulai tidak boleh setelah tanggal akhir.',
     en: 'Invalid date range. The start date cannot be after the end date.',
